@@ -1,0 +1,92 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Logical_calculator"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Logical_calculator.MainWindow"
+        x:DataType="local:MainWindow"
+        Title="Logical_calculator">
+    
+    <Window.Styles>
+        <Style Selector="Button.key-btn">
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="Width" Value="45"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        
+        <Style Selector="Button.calc-btn">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+    </Window.Styles>
+    
+    <Grid RowDefinitions="Auto, Auto, Auto, *">
+        
+        <!-- 1. Текстовое поле для ввода уравнения -->
+        <TextBox Grid.Row="0"
+                 x:Name="EquationTextBox"
+                 FontSize="20"
+                 Margin="0,0,0,24"
+                 HorizontalAlignment="Stretch"
+                 VerticalContentAlignment="Center"/>
+
+        <ItemsControl Grid.Row="1" 
+                      ItemsSource="{Binding KeyboardSymbols}"
+                      Margin="0,0,0,24"
+                      HorizontalAlignment="Center">
+            
+            <!-- Указываем, что элементы должны располагаться в сетке 4xN -->
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Rows="4"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <!-- Указываем, как именно должен выглядеть каждый элемент (кнопка) -->
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <!-- {Binding} без пути означает "взять сам объект строки" -->
+                    <Button Content="{Binding}" 
+                            Classes="key-btn" 
+                            Click="SymbolButton_Click"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            
+        </ItemsControl>
+
+        <!-- 3. Кнопка "Рассчитать" -->
+        <Button Grid.Row="2"
+                x:Name="CalculateButton"
+                Content="Рассчитать"
+                FontSize="18"
+                FontWeight="Bold"
+                HorizontalAlignment="Stretch"
+                Margin="0,0,0,24"
+                Click="CalculateButton_Click"
+                /> 
+
+        <!-- 4. Заглушка под блок для результата -->
+        <Border Grid.Row="3"
+                Background="#F3F4F6"
+                BorderBrush="#D1D5DB"
+                BorderThickness="2"
+                CornerRadius="8"
+                Padding="16">
+            <TextBlock x:Name="ResultTextBlock"
+                       Text="Здесь будет отображен результат вычислений"
+                       FontSize="16"
+                       Foreground="#6B7280"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       TextWrapping="Wrap"
+                       TextAlignment="Center"/>
+        </Border>
+
+    </Grid>
+</Window>
