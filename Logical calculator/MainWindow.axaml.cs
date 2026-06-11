@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using NCalc;
@@ -44,19 +45,19 @@ public partial class MainWindow : Window
 
     private void CalculateButton_Click(object? sender, RoutedEventArgs e)
     {
-        char[] parametrs = new[] { 'x', 'y', 'z' };
         string input = EquationTextBox.Text.Replace(" ", "");
         string equation = string.Concat(input.Select(c => Symbols.TryGetValue(c, out var r)? r:c.ToString()));
         var expression = new Expression(equation);
+        string[] parametrs = expression.GetParameterNames().ToArray();
         int resultCount = 2;
         for (int i = 1; i < parametrs.Length; i++) { resultCount *= 2;}
         Console.WriteLine(resultCount);
         results = new Result[resultCount];
         calculateEq(parametrs, parametrs.Length, expression);
-        
+        DrawTable();
     }
 
-    public void calculateEq(char[] parametrs, int depth, Expression exp, int numberOfResult = 0)
+    public void calculateEq(string[] parametrs, int depth, Expression exp, int numberOfResult = 0)
     {
         if (depth == 0)
         {
@@ -76,5 +77,83 @@ public partial class MainWindow : Window
         
     }
     
+    private void DrawTable()
+{
+    ResultGrid.Children.Clear();
+    ResultGrid.RowDefinitions.Clear();
+    ResultGrid.ColumnDefinitions.Clear();
+    ResultGrid.ShowGridLines = true;
     
+    var paramNames = results[0].values.Keys.ToList();
+    int colCount = paramNames.Count + 1; 
+    
+    for (int i = 0; i < colCount; i++)
+    {
+        ResultGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
+    }
+    
+    for (int i = 0; i <= results.Length; i++)
+    {
+        ResultGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+    }
+
+
+    for (int i = 0; i < paramNames.Count; i++)
+    {
+        var cell = CreateCell(paramNames[i], isHeader: true);
+        Grid.SetRow(cell, 0);
+        Grid.SetColumn(cell, i);
+        ResultGrid.Children.Add(cell);
+    }
+    var fHeader = CreateCell("F", isHeader: true);
+    Grid.SetRow(fHeader, 0);
+    Grid.SetColumn(fHeader, colCount - 1);
+    ResultGrid.Children.Add(fHeader);
+    
+    for (int r = 0; r < results.Length; r++)
+    {
+        for (int c = 0; c < paramNames.Count; c++)
+        {
+            string val = results[r].values[paramNames[c]] ? "1" : "0"; 
+            var cell = CreateCell(val);
+            Grid.SetRow(cell, r + 1);
+            Grid.SetColumn(cell, c);
+            ResultGrid.Children.Add(cell);
+        }
+        
+
+        string resVal = results[r].result ? "1" : "0";
+        var resCell = CreateCell(resVal, isResult: true);
+        Grid.SetRow(resCell, r + 1);
+        Grid.SetColumn(resCell, colCount - 1);
+        ResultGrid.Children.Add(resCell);
+    }
+}
+
+
+    private TextBlock CreateCell(string text, bool isHeader = false, bool isResult = false)
+    {
+        var tb = new TextBlock
+        {
+            Text = text,
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+            Padding = new Thickness(5),
+            FontSize = 32
+        };
+
+        // Раскрашиваем заголовок и колонку результата
+        if (isHeader)
+        {
+            tb.FontWeight = Avalonia.Media.FontWeight.Bold;
+            tb.Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.LightSkyBlue);
+        }
+        else if (isResult)
+        {
+            tb.MinWidth = 45;
+            tb.Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.LightGreen);
+        }
+
+        return tb;
+    }
 }

@@ -68,7 +68,7 @@
 
         <!-- 4. Заглушка под блок для результата -->
         <Border Grid.Row="3"
-                Background="#F3F4F6"
+                Background="Gray"
                 BorderBrush="#D1D5DB"
                 BorderThickness="2"
                 CornerRadius="8"
