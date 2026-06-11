@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 
@@ -16,6 +17,12 @@ public partial class MainWindow : Window
         "¬", "∧", "∨", "⊕", "⇒", "≡",
         "x", "y", "z", "n", "m","u"
     };
+
+    public Dictionary<char, string> Symbols { get; } = new Dictionary<char, string>
+    {
+        ['¬'] = "!", ['∧'] = " and ", ['∨'] = " or ", ['⊕'] = "", ['⇒'] = " <= ", ['≡'] = " == "
+    };
+    
     public MainWindow()
     {
         DataContext = this;
@@ -25,19 +32,18 @@ public partial class MainWindow : Window
     {
         if (sender is Button button && button.Content is string symbol)
         {
-            // Добавляем символ в конец текущего текста
             EquationTextBox.Text += symbol;
             
-            // Перемещаем курсор в конец текста для удобства дальнейшего ввода
             EquationTextBox.CaretIndex = EquationTextBox.Text?.Length ?? 0;
             
-            // Возвращаем фокус на текстовое поле
             EquationTextBox.Focus();
         }
     }
 
     private void CalculateButton_Click(object? sender, RoutedEventArgs e)
     {
-        Console.Write("Решать мы это конечно не будем" + EquationTextBox.Text);
+        string input = EquationTextBox.Text.Replace(" ", "");
+        string equation = string.Concat(input.Select(c => Symbols.TryGetValue(c, out var r)? r:c.ToString()));
+        Console.WriteLine(equation);
     }
 }
