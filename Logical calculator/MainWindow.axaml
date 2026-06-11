@@ -29,7 +29,6 @@
     
     <Grid RowDefinitions="Auto, Auto, Auto, *">
         
-        <!-- 1. Текстовое поле для ввода уравнения -->
         <TextBox Grid.Row="0"
                  x:Name="EquationTextBox"
                  FontSize="20"
@@ -57,8 +56,7 @@
             </ItemsControl.ItemTemplate>
             
         </ItemsControl>
-
-        <!-- 3. Кнопка "Рассчитать" -->
+        
         <Button Grid.Row="2"
                 x:Name="CalculateButton"
                 Content="Рассчитать"
@@ -75,14 +73,14 @@
                 BorderThickness="2"
                 CornerRadius="8"
                 Padding="16">
-            <TextBlock x:Name="ResultTextBlock"
-                       Text="Здесь будет отображен результат вычислений"
-                       FontSize="16"
-                       Foreground="#6B7280"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       TextWrapping="Wrap"
-                       TextAlignment="Center"/>
+            
+            <!-- ScrollViewer нужен на случай, если таблица не поместится на экран -->
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" 
+                          VerticalScrollBarVisibility="Auto">
+                <!-- Пустой Grid, который мы заполним из C# -->
+                <Grid x:Name="ResultGrid" />
+            </ScrollViewer>
+            
         </Border>
 
     </Grid>
