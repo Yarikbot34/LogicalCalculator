@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using NCalc;
 
 
 namespace Logical_calculator;
@@ -44,6 +45,28 @@ public partial class MainWindow : Window
     {
         string input = EquationTextBox.Text.Replace(" ", "");
         string equation = string.Concat(input.Select(c => Symbols.TryGetValue(c, out var r)? r:c.ToString()));
-        Console.WriteLine(equation);
+        var expression = new Expression(equation);
+        Console.WriteLine("x y z    F");
+        calculateEq(new[] {'x', 'y', 'z'}, 0, expression);
+        
+    }
+
+    public void calculateEq(char[] parametrs, int depth, Expression exp)
+    {
+        if (parametrs.Length == depth)
+        {
+            string answ = $"{exp.Parameters["x"]} {exp.Parameters["y"]} {exp.Parameters["z"]}   {(bool)exp.Evaluate()}";
+            answ = answ.Replace("True", "1").Replace("False", "0");
+            Console.WriteLine(answ);
+        }
+        else
+        {
+            foreach (bool status in new[] {false, true})
+            {
+                exp.Parameters[parametrs[depth].ToString()] = status;
+                calculateEq(parametrs, depth + 1, exp);
+            }
+        }
+        
     }
 }
