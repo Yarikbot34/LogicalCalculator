@@ -23,7 +23,7 @@ public partial class MainWindow : Window
 
     public Dictionary<char, string> Symbols { get; } = new Dictionary<char, string>
     {
-        ['¬'] = "!", ['∧'] = " and ", ['∨'] = " or ", ['⊕'] = "", ['⇒'] = " <= ", ['≡'] = " == "
+        ['¬'] = "!", ['∧'] = " and ", ['∨'] = " or ", ['⊕'] = " != ", ['⇒'] = " <= ", ['≡'] = " == "
     };
     
     public MainWindow()
@@ -47,6 +47,7 @@ public partial class MainWindow : Window
     {
         string input = EquationTextBox.Text.Replace(" ", "");
         string equation = string.Concat(input.Select(c => Symbols.TryGetValue(c, out var r)? r:c.ToString()));
+        Console.WriteLine(equation);
         var expression = new Expression(equation);
         string[] parametrs = expression.GetParameterNames().ToArray();
         int resultCount = 2;
@@ -82,7 +83,6 @@ public partial class MainWindow : Window
     ResultGrid.Children.Clear();
     ResultGrid.RowDefinitions.Clear();
     ResultGrid.ColumnDefinitions.Clear();
-    ResultGrid.ShowGridLines = true;
     
     var paramNames = results[0].values.Keys.ToList();
     int colCount = paramNames.Count + 1; 
@@ -131,29 +131,31 @@ public partial class MainWindow : Window
 }
 
 
-    private TextBlock CreateCell(string text, bool isHeader = false, bool isResult = false)
+    private Border CreateCell(string text, bool isHeader = false, bool isResult = false)
     {
         var tb = new TextBlock
         {
             Text = text,
+            Foreground = Avalonia.Media.Brushes.Black,
             HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
             VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
             Padding = new Thickness(5),
             FontSize = 32
         };
 
-        // Раскрашиваем заголовок и колонку результата
-        if (isHeader)
-        {
-            tb.FontWeight = Avalonia.Media.FontWeight.Bold;
-            tb.Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.LightSkyBlue);
-        }
-        else if (isResult)
-        {
-            tb.MinWidth = 45;
-            tb.Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.LightGreen);
-        }
+        Avalonia.Media.IBrush background = Avalonia.Media.Brushes.Beige;
+        if (isHeader) background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.LightSkyBlue);
+        else if (isResult) background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.LightGreen);
 
-        return tb;
+        // 3. Оборачиваем в Border с рамкой
+        return new Border
+        {
+            Child = tb,
+            Background = background,
+            BorderBrush = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.Black),
+            BorderThickness = new Thickness(2), // Толщина линий
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch
+        };
     }
 }

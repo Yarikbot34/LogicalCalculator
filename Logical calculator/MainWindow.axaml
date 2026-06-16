@@ -65,8 +65,7 @@
                 Classes="calc-btn"
                 Click="CalculateButton_Click"
                 /> 
-
-        <!-- 4. Заглушка под блок для результата -->
+        
         <Border Grid.Row="3"
                 Background="Gray"
                 BorderBrush="#D1D5DB"
@@ -74,10 +73,8 @@
                 CornerRadius="8"
                 Padding="16">
             
-            <!-- ScrollViewer нужен на случай, если таблица не поместится на экран -->
             <ScrollViewer HorizontalScrollBarVisibility="Auto" 
                           VerticalScrollBarVisibility="Auto">
-                <!-- Пустой Grid, который мы заполним из C# -->
                 <Grid x:Name="ResultGrid" />
             </ScrollViewer>
             
