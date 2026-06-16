@@ -3,26 +3,32 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Logical_calculator"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="500"
+        MinWidth="400" 
+        MinHeight="500"
+        Width="400"
+        Height="700"
         x:Class="Logical_calculator.MainWindow"
         x:DataType="local:MainWindow"
         Title="Logical_calculator">
     
     <Window.Styles>
         <Style Selector="Button.key-btn">
-            <Setter Property="Height" Value="45"/>
-            <Setter Property="Width" Value="45"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="Width" Value="60"/>
             <Setter Property="Margin" Value="0"/>
-            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontSize" Value="24"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
         
         <Style Selector="Button.calc-btn">
-            <Setter Property="FontSize" Value="18"/>
-            <Setter Property="Width" Value="180"/>
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="Width" Value="240"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Margin" Value="0,0,0,0"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
         </Style>
     </Window.Styles>
@@ -31,9 +37,10 @@
         
         <TextBox Grid.Row="0"
                  x:Name="EquationTextBox"
-                 FontSize="20"
-                 Margin="0,0,0,24"
+                 FontSize="32"
+                 Margin="30,32,30,24"
                  HorizontalAlignment="Stretch"
+                 MinWidth="200"
                  VerticalContentAlignment="Center"/>
 
         <ItemsControl Grid.Row="1" 
@@ -67,11 +74,14 @@
                 /> 
         
         <Border Grid.Row="3"
-                Background="Gray"
-                BorderBrush="#D1D5DB"
-                BorderThickness="2"
-                CornerRadius="8"
-                Padding="16">
+                Background="Transparent"
+                BorderBrush="Gray"
+                BorderThickness="1"
+                CornerRadius="0"
+                Padding="16"
+                HorizontalAlignment="Stretch"
+                >
+                
             
             <ScrollViewer HorizontalScrollBarVisibility="Auto" 
                           VerticalScrollBarVisibility="Auto">

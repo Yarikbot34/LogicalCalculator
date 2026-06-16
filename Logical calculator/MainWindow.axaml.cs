@@ -18,7 +18,7 @@ public partial class MainWindow : Window
     {
         "(", ")", 
         "¬", "∧", "∨", "⊕", "⇒", "≡",
-        "x", "y", "z", "n", "m","u"
+        "x", "y", "z", "n", "m","u", "a", "b"
     };
 
     public Dictionary<char, string> Symbols { get; } = new Dictionary<char, string>
@@ -78,8 +78,9 @@ public partial class MainWindow : Window
         
     }
     
-    private void DrawTable()
+private void DrawTable()
 {
+    ResultGrid.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center;
     ResultGrid.Children.Clear();
     ResultGrid.RowDefinitions.Clear();
     ResultGrid.ColumnDefinitions.Clear();
@@ -96,8 +97,7 @@ public partial class MainWindow : Window
     {
         ResultGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
     }
-
-
+    
     for (int i = 0; i < paramNames.Count; i++)
     {
         var cell = CreateCell(paramNames[i], isHeader: true);
@@ -142,18 +142,18 @@ public partial class MainWindow : Window
             Padding = new Thickness(5),
             FontSize = 32
         };
-
-        Avalonia.Media.IBrush background = Avalonia.Media.Brushes.Beige;
-        if (isHeader) background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.LightSkyBlue);
-        else if (isResult) background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.LightGreen);
-
-        // 3. Оборачиваем в Border с рамкой
+        
+        Avalonia.Media.IBrush background = Avalonia.Media.Brushes.LightGray;
+        if (isHeader) background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.SlateGray);
+        else if (isResult && text == "1") background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.DarkGreen);
+        else if (isResult && text == "0") background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.DarkRed);
+        
         return new Border
         {
             Child = tb,
             Background = background,
             BorderBrush = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.Black),
-            BorderThickness = new Thickness(2), // Толщина линий
+            BorderThickness = new Thickness(2), 
             HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
             VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch
         };
