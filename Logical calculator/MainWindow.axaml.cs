@@ -43,15 +43,25 @@ public partial class MainWindow : Window
 
     private void CalculateButton_Click(object? sender, RoutedEventArgs e)
     {
+        ErrorTextBlock.Text = "";
         string input = EquationTextBox.Text.Replace(" ", "");
         string equation = string.Concat(input.Select(c => Symbols.TryGetValue(c, out var r)? r:c.ToString()));
-        var expression = new Expression(equation);
-        string[] parametrs = expression.GetParameterNames().ToArray();
-        int resultCount = (int)Math.Pow(2, parametrs.Length);
+        try
+        {
+            var expression = new Expression(equation);
+            string[] parametrs = expression.GetParameterNames().ToArray();
+            int resultCount = (int)Math.Pow(2, parametrs.Length);
+            results = new Result[resultCount];
+            calculateEq(parametrs, parametrs.Length, expression);
+            DrawTable();
+        }
+        catch (Exception ex)
+        {
+            ErrorTextBlock.Text = ex.Message;
+        }
 
-        results = new Result[resultCount];
-        calculateEq(parametrs, parametrs.Length, expression);
-        DrawTable();
+   
+
     }
 
     public void calculateEq(string[] parametrs, int depth, Expression exp, int numberOfResult = 0)

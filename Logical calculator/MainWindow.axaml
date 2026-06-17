@@ -31,21 +31,40 @@
             <Setter Property="Margin" Value="0,10,0,20"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
         </Style>
+        
+        <Style Selector="TextBlock.column-header">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,16,0,12"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
     </Window.Styles>
     
     <Grid ColumnDefinitions="325, *">
         
-        <Grid Grid.Column="0" RowDefinitions="Auto, Auto, Auto, *">
+        <!-- Левая колонка: Ввод данных -->
+        <Grid Grid.Column="0" RowDefinitions="Auto, Auto, Auto, Auto, *">
             
-            <TextBox Grid.Row="0"
+            <TextBlock Grid.Row="0"
+                       Text="Ввод данных"
+                       Classes="column-header" />
+            
+            <TextBox Grid.Row="1"
                      x:Name="EquationTextBox"
                      FontSize="32"
-                     Margin="30,32,30,24"
+                     Margin="30,0,30,12"
                      HorizontalAlignment="Stretch"
                      MinWidth="200"
                      VerticalContentAlignment="Center"/>
-
-            <ItemsControl Grid.Row="1" 
+            
+            <TextBlock Grid.Row="2"
+                       x:Name="ErrorTextBlock"
+                       TextAlignment="Center"
+                       Padding="0,0,0,12"
+                       VerticalAlignment="Center"
+                       Foreground="Red"/>
+            
+            <ItemsControl Grid.Row="3" 
                           ItemsSource="{Binding KeyboardSymbols}"
                           Margin="0,0,0,10"
                           HorizontalAlignment="Center">
@@ -66,34 +85,40 @@
                 
             </ItemsControl>
             
-            
-            <Button Grid.Row="3"
+            <Button Grid.Row="4"
                     x:Name="CalculateButton"
                     Content="Рассчитать"
                     HorizontalContentAlignment="Center"
                     VerticalAlignment="Top"
                     Background="DarkSeaGreen"
                     Classes="calc-btn"
-                    Click="CalculateButton_Click"
-                    /> 
+                    Click="CalculateButton_Click" /> 
         </Grid>
         
-        <Border Grid.Column="1"
-                Background="Transparent"
-                BorderBrush="Gray"
-                BorderThickness="1,0,0,0"
-                CornerRadius="0"
-                Padding="16"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                Margin="0,0,0,0">
-                
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" 
-                          VerticalScrollBarVisibility="Auto">
-                <Grid x:Name="ResultGrid" />
-            </ScrollViewer>
+        <!-- Правая колонка: Таблица истинности -->
+        <Grid Grid.Column="1" RowDefinitions="Auto, *">
             
-        </Border>
+            <TextBlock Grid.Row="0"
+                       Text="Таблица истинности"
+                       Classes="column-header" />
+            
+            <Border Grid.Row="1"
+                    Background="Transparent"
+                    BorderBrush="Gray"
+                    BorderThickness="1,0,0,0"
+                    CornerRadius="0"
+                    Padding="16"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Margin="0,0,0,0">
+                
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" 
+                              VerticalScrollBarVisibility="Auto">
+                    <Grid x:Name="ResultGrid" />
+                </ScrollViewer>
+                
+            </Border>
+        </Grid>
 
     </Grid>
 </Window>
