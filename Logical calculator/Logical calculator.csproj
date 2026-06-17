@@ -17,6 +17,7 @@
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
         <PackageReference Include="NCalc.Core" Version="6.1.0" />
+        <PackageReference Include="NCalc.Domain" Version="6.1.0" />
         <PackageReference Include="NCalcAsync" Version="6.1.0" />
     </ItemGroup>
 </Project>

@@ -9,6 +9,8 @@ public class Result
     public string equation;
     public Dictionary<string, bool> values;
     public bool result;
+    public bool writeResult;
+    public string[] steps;
     
     public Result(Expression exp)
     {

@@ -3,10 +3,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Logical_calculator"
-        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="500"
-        MinWidth="400" 
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="500"
+        MinWidth="600" 
         MinHeight="500"
-        Width="400"
+        Width="600"
         Height="700"
         x:Class="Logical_calculator.MainWindow"
         x:DataType="local:MainWindow"
@@ -24,7 +24,7 @@
         
         <Style Selector="Button.calc-btn">
             <Setter Property="FontSize" Value="24"/>
-            <Setter Property="Width" Value="240"/>
+            <Setter Property="Width" Value="300"/>
             <Setter Property="Height" Value="60"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -33,56 +33,69 @@
         </Style>
     </Window.Styles>
     
-    <Grid RowDefinitions="Auto, Auto, Auto, *">
+    <Grid ColumnDefinitions="325, *">
         
-        <TextBox Grid.Row="0"
-                 x:Name="EquationTextBox"
-                 FontSize="32"
-                 Margin="30,32,30,24"
-                 HorizontalAlignment="Stretch"
-                 MinWidth="200"
-                 VerticalContentAlignment="Center"/>
+        <Grid Grid.Column="0" RowDefinitions="Auto, Auto, Auto, *">
+            
+            <TextBox Grid.Row="0"
+                     x:Name="EquationTextBox"
+                     FontSize="32"
+                     Margin="30,32,30,24"
+                     HorizontalAlignment="Stretch"
+                     MinWidth="200"
+                     VerticalContentAlignment="Center"/>
 
-        <ItemsControl Grid.Row="1" 
-                      ItemsSource="{Binding KeyboardSymbols}"
-                      Margin="0,0,0,24"
-                      HorizontalAlignment="Center">
+            <ItemsControl Grid.Row="1" 
+                          ItemsSource="{Binding KeyboardSymbols}"
+                          Margin="0,0,0,10"
+                          HorizontalAlignment="Center">
+                
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="4"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="{Binding}" 
+                                Classes="key-btn" 
+                                Click="SymbolButton_Click"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                
+            </ItemsControl>
             
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <UniformGrid Rows="4"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
+            <CheckBox Grid.Row="2" 
+                      x:Name="WriteSteps" 
+                      Content="Показать этапы"
+                      HorizontalAlignment="Center"
+                      Margin="0,0,0,25"/>
             
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Button Content="{Binding}" 
-                            Classes="key-btn" 
-                            Click="SymbolButton_Click"/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            
-        </ItemsControl>
+            <Button Grid.Row="3"
+                    x:Name="CalculateButton"
+                    Content="Рассчитать"
+                    HorizontalContentAlignment="Center"
+                    VerticalAlignment="Top"
+                    Background="DarkSeaGreen"
+                    Classes="calc-btn"
+                    Click="CalculateButton_Click"
+                    /> 
+        </Grid>
         
-        <Button Grid.Row="2"
-                x:Name="CalculateButton"
-                Content="Рассчитать"
-                HorizontalContentAlignment="Center"
-                Background="DarkSeaGreen"
-                Classes="calc-btn"
-                Click="CalculateButton_Click"
-                /> 
+        <!-- Вертикальный разделитель -->
         
-        <Border Grid.Row="3"
+        <!-- ============ ПРАВАЯ ЧАСТЬ: таблица результатов ============ -->
+        <Border Grid.Column="1"
                 Background="Transparent"
                 BorderBrush="Gray"
-                BorderThickness="1"
+                BorderThickness="1,0,0,0"
                 CornerRadius="0"
                 Padding="16"
                 HorizontalAlignment="Stretch"
-                >
+                VerticalAlignment="Stretch"
+                Margin="0,0,0,0">
                 
-            
             <ScrollViewer HorizontalScrollBarVisibility="Auto" 
                           VerticalScrollBarVisibility="Auto">
                 <Grid x:Name="ResultGrid" />

@@ -18,7 +18,7 @@ public partial class MainWindow : Window
     {
         "(", ")", 
         "¬", "∧", "∨", "⊕", "⇒", "≡",
-        "x", "y", "z", "n", "m","u", "a", "b"
+        "x", "y", "z", "n", "m","u", "0", "1"
     };
 
     public Dictionary<char, string> Symbols { get; } = new Dictionary<char, string>
@@ -47,7 +47,6 @@ public partial class MainWindow : Window
     {
         string input = EquationTextBox.Text.Replace(" ", "");
         string equation = string.Concat(input.Select(c => Symbols.TryGetValue(c, out var r)? r:c.ToString()));
-        Console.WriteLine(equation);
         var expression = new Expression(equation);
         string[] parametrs = expression.GetParameterNames().ToArray();
         int resultCount = 2;
@@ -77,10 +76,13 @@ public partial class MainWindow : Window
         }
         
     }
+
+
+
     
 private void DrawTable()
 {
-    ResultGrid.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center;
+    ResultGrid.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch;
     ResultGrid.Children.Clear();
     ResultGrid.RowDefinitions.Clear();
     ResultGrid.ColumnDefinitions.Clear();
@@ -137,7 +139,7 @@ private void DrawTable()
         {
             Text = text,
             Foreground = Avalonia.Media.Brushes.Black,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
             VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
             Padding = new Thickness(5),
             FontSize = 32
