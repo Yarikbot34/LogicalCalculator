@@ -95,7 +95,6 @@
                     Click="CalculateButton_Click" /> 
         </Grid>
         
-        <!-- Правая колонка: Таблица истинности -->
         <Grid Grid.Column="1" RowDefinitions="Auto, *">
             
             <TextBlock Grid.Row="0"

@@ -9,6 +9,8 @@ public class Result
     public string equation;
     public Dictionary<string, bool> values;
     public bool result;
+    public static int countTrue;
+    public static int countFalse;
     
     public Result(Expression exp)
     {
@@ -19,5 +21,7 @@ public class Result
             values[row.Key] = (bool)row.Value;
         }
         result = (bool)exp.Evaluate();
+        if (result){countTrue++;}
+        else{countFalse++;}
     }
 }

@@ -43,6 +43,9 @@ public partial class MainWindow : Window
 
     private void CalculateButton_Click(object? sender, RoutedEventArgs e)
     {
+        Result.countFalse = 0;
+        Result.countTrue = 0;
+        bool isTavtology = false;
         ErrorTextBlock.Text = "";
         string input = EquationTextBox.Text.Replace(" ", "");
         string equation = string.Concat(input.Select(c => Symbols.TryGetValue(c, out var r)? r:c.ToString()));
@@ -53,6 +56,7 @@ public partial class MainWindow : Window
             int resultCount = (int)Math.Pow(2, parametrs.Length);
             results = new Result[resultCount];
             calculateEq(parametrs, parametrs.Length, expression);
+            isTavtology = (int)Math.Pow(2, parametrs.Length) == Result.countTrue || (int)Math.Pow(2, parametrs.Length) == Result.countFalse;
             DrawTable();
         }
         catch (Exception ex)
@@ -151,8 +155,8 @@ private void DrawTable()
         
         Avalonia.Media.IBrush background = Avalonia.Media.Brushes.LightGray;
         if (isHeader) background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.SlateGray);
-        else if (isResult && (text == "1" || text == "Истина")) background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.DarkGreen);
-        else if (isResult && (text == "0" || text == "Ложь")) background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.DarkRed);
+        else if (isResult && text == "1" ) background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.DarkGreen);
+        else if (isResult && text == "0") background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.DarkRed);
         
         return new Border
         {
