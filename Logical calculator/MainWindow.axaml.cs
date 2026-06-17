@@ -36,9 +36,7 @@ public partial class MainWindow : Window
         if (sender is Button button && button.Content is string symbol)
         {
             EquationTextBox.Text += symbol;
-            
             EquationTextBox.CaretIndex = EquationTextBox.Text?.Length ?? 0;
-            
             EquationTextBox.Focus();
         }
     }
@@ -49,9 +47,8 @@ public partial class MainWindow : Window
         string equation = string.Concat(input.Select(c => Symbols.TryGetValue(c, out var r)? r:c.ToString()));
         var expression = new Expression(equation);
         string[] parametrs = expression.GetParameterNames().ToArray();
-        int resultCount = 2;
-        for (int i = 1; i < parametrs.Length; i++) { resultCount *= 2;}
-        Console.WriteLine(resultCount);
+        int resultCount = (int)Math.Pow(2, parametrs.Length);
+
         results = new Result[resultCount];
         calculateEq(parametrs, parametrs.Length, expression);
         DrawTable();
@@ -63,7 +60,6 @@ public partial class MainWindow : Window
         {
             Result res = new Result(exp);
             results[numberOfResult] = res;
-            Console.WriteLine($"Writed result №{numberOfResult + 1}");
         }
         else
         {
@@ -76,9 +72,7 @@ public partial class MainWindow : Window
         }
         
     }
-
-
-
+    
     
 private void DrawTable()
 {
@@ -147,8 +141,8 @@ private void DrawTable()
         
         Avalonia.Media.IBrush background = Avalonia.Media.Brushes.LightGray;
         if (isHeader) background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.SlateGray);
-        else if (isResult && text == "1") background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.DarkGreen);
-        else if (isResult && text == "0") background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.DarkRed);
+        else if (isResult && (text == "1" || text == "Истина")) background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.DarkGreen);
+        else if (isResult && (text == "0" || text == "Ложь")) background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.DarkRed);
         
         return new Border
         {

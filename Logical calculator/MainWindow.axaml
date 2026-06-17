@@ -28,7 +28,7 @@
             <Setter Property="Height" Value="60"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Margin" Value="0,0,0,20"/>
+            <Setter Property="Margin" Value="0,10,0,20"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
         </Style>
     </Window.Styles>
@@ -66,11 +66,6 @@
                 
             </ItemsControl>
             
-            <CheckBox Grid.Row="2" 
-                      x:Name="WriteSteps" 
-                      Content="Показать этапы"
-                      HorizontalAlignment="Center"
-                      Margin="0,0,0,25"/>
             
             <Button Grid.Row="3"
                     x:Name="CalculateButton"
@@ -83,9 +78,6 @@
                     /> 
         </Grid>
         
-        <!-- Вертикальный разделитель -->
-        
-        <!-- ============ ПРАВАЯ ЧАСТЬ: таблица результатов ============ -->
         <Border Grid.Column="1"
                 Background="Transparent"
                 BorderBrush="Gray"
