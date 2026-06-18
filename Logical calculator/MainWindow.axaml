@@ -38,6 +38,19 @@
             <Setter Property="Margin" Value="0,16,0,12"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
         </Style>
+        
+        <Style Selector="TextBlock.stat-label">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        
+        <Style Selector="TextBlock.stat-value">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
     </Window.Styles>
     
     <Grid ColumnDefinitions="325, *">
@@ -95,13 +108,56 @@
                     Click="CalculateButton_Click" /> 
         </Grid>
         
-        <Grid Grid.Column="1" RowDefinitions="Auto, *">
+        <Grid Grid.Column="1" RowDefinitions="Auto, Auto, *">
             
-            <TextBlock Grid.Row="0"
+            <TextBlock Grid.Row="0" 
                        Text="Таблица истинности"
+                       TextAlignment="Left"
                        Classes="column-header" />
             
             <Border Grid.Row="1"
+                    Background="Transparent"
+                    BorderBrush="Gray"
+                    BorderThickness="1,0,0,0"
+                    Padding="16,12"
+                    Margin="0,0,0,0">
+                
+                <Grid ColumnDefinitions="3*, 1*" RowDefinitions="Auto, Auto, Auto">
+                    
+                    <TextBlock Grid.Row="0" Grid.Column="0"
+                               Text="Положительных исходов:"
+                               Classes="stat-label" />
+                    <TextBlock Grid.Row="0" Grid.Column="1"
+                               x:Name="PositiveCountText"
+                               Text=""
+                               Classes="stat-value" />
+                    
+                    <TextBlock Grid.Row="1" Grid.Column="0"
+                               Text="Отрицательных исходов:"
+                               Classes="stat-label"
+                               Margin="0,8,0,0" />
+                    <TextBlock Grid.Row="1" Grid.Column="1"
+                               x:Name="NegativeCountText"
+                               Text=""
+                               Classes="stat-value"
+                               Margin="0,8,0,0" />
+                    
+                    <TextBlock Grid.Row="2" Grid.Column="0"
+                               Text="Тавтология:"
+                               Classes="stat-label"
+                               Margin="0,8,0,0" />
+                    <TextBlock Grid.Row="2" Grid.Column="1"
+                               x:Name="TautologyText"
+                               Text=""
+                               Classes="stat-value"
+                               Margin="0,8,0,0" />
+                    
+                </Grid>
+                
+            </Border>
+            
+            <!-- Таблица истинности -->
+            <Border Grid.Row="2"
                     Background="Transparent"
                     BorderBrush="Gray"
                     BorderThickness="1,0,0,0"

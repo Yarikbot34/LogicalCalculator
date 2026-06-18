@@ -57,6 +57,9 @@ public partial class MainWindow : Window
             results = new Result[resultCount];
             calculateEq(parametrs, parametrs.Length, expression);
             isTavtology = (int)Math.Pow(2, parametrs.Length) == Result.countTrue || (int)Math.Pow(2, parametrs.Length) == Result.countFalse;
+            PositiveCountText.Text = Result.countTrue.ToString();
+            NegativeCountText.Text = Result.countFalse.ToString();
+            TautologyText.Text = isTavtology ? "Да" : "Нет";
             DrawTable();
         }
         catch (Exception ex)
