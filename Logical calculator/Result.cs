@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NCalc;
 
 namespace Logical_calculator;
@@ -23,5 +24,12 @@ public class Result
         result = (bool)exp.Evaluate();
         if (result){countTrue++;}
         else{countFalse++;}
+    }
+
+    public string[] getData()
+    {
+        string[] answ = values.Values.Select(v => v ? "1":"0").ToArray();
+        answ.Append(result ? "1" : "0");
+        return answ;
     }
 }
