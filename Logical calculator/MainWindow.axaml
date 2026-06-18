@@ -55,8 +55,7 @@
     
     <Grid ColumnDefinitions="325, *">
         
-        <!-- Левая колонка: Ввод данных -->
-        <Grid Grid.Column="0" RowDefinitions="Auto, Auto, Auto, Auto, *">
+        <Grid Grid.Column="0" RowDefinitions="Auto, Auto, Auto, Auto, Auto, *">
             
             <TextBlock Grid.Row="0"
                        Text="Ввод данных"
@@ -68,7 +67,9 @@
                      Margin="30,0,30,12"
                      HorizontalAlignment="Stretch"
                      MinWidth="200"
-                     VerticalContentAlignment="Center"/>
+                     VerticalContentAlignment="Center"
+                     TextWrapping="NoWrap"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto" />
             
             <TextBlock Grid.Row="2"
                        x:Name="ErrorTextBlock"
@@ -155,8 +156,6 @@
                 </Grid>
                 
             </Border>
-            
-            <!-- Таблица истинности -->
             <Border Grid.Row="2"
                     Background="Transparent"
                     BorderBrush="Gray"
