@@ -6,7 +6,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using NCalc;
-
+using ClosedXML.Excel;
 
 namespace Logical_calculator;
 
@@ -60,17 +60,32 @@ public partial class MainWindow : Window
             PositiveCountText.Text = Result.countTrue.ToString();
             NegativeCountText.Text = Result.countFalse.ToString();
             TautologyText.Text = isTavtology ? "Да" : "Нет";
+            exportXlsx(results, equation, parametrs);
             DrawTable();
         }
         catch (Exception ex)
         {
             ErrorTextBlock.Text = ex.Message;
         }
-
-   
-
     }
 
+
+    public void exportXlsx(Result[] results, string expression, string[] parametrs)
+    {
+        parametrs = parametrs.Append(expression).ToArray();
+        using (var wBook = new XLWorkbook())
+        {
+            var worksheet = wBook.Worksheets.Add(expression);
+            worksheet.Cell(1, 1).InsertTable(results.Select(r => r.getData()));
+            for(int i = 0; i < parametrs.Length; i++)
+            {
+                worksheet.Cell(1, i+1).Value = parametrs[i];
+            }
+            worksheet.Columns().AdjustToContents();
+            wBook.SaveAs("Result.xlsx");
+        }
+    }
+    
     public void calculateEq(string[] parametrs, int depth, Expression exp, int numberOfResult = 0)
     {
         if (depth == 0)
@@ -97,10 +112,8 @@ private void DrawTable()
     ResultGrid.Children.Clear();
     ResultGrid.RowDefinitions.Clear();
     ResultGrid.ColumnDefinitions.Clear();
-    
     var paramNames = results[0].values.Keys.ToList();
     int colCount = paramNames.Count + 1; 
-    
     for (int i = 0; i < colCount; i++)
     {
         ResultGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) });
@@ -133,8 +146,6 @@ private void DrawTable()
             Grid.SetColumn(cell, c);
             ResultGrid.Children.Add(cell);
         }
-        
-
         string resVal = results[r].result ? "1" : "0";
         var resCell = CreateCell(resVal, isResult: true);
         Grid.SetRow(resCell, r + 1);

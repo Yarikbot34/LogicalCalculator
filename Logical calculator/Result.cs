@@ -28,8 +28,7 @@ public class Result
 
     public string[] getData()
     {
-        string[] answ = values.Values.Select(v => v ? "1":"0").ToArray();
-        answ.Append(result ? "1" : "0");
+        string[] answ = values.Values.Select(v => v ? "1":"0").Append(result ? "1" : "0").ToArray();
         return answ;
     }
 }
