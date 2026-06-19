@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
@@ -30,6 +31,8 @@ public partial class MainWindow : Window
     {
         DataContext = this;
         InitializeComponent();
+        string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        SavePathTextBox.Text = Path.Combine(desktopPath, "result.xlsx");
     }
     private void SymbolButton_Click(object? sender, RoutedEventArgs e)
     {
@@ -45,7 +48,7 @@ public partial class MainWindow : Window
     {
         Result.countFalse = 0;
         Result.countTrue = 0;
-        bool isTavtology = false;
+        bool isTavtology;
         ErrorTextBlock.Text = "";
         string input = EquationTextBox.Text.Replace(" ", "");
         string equation = string.Concat(input.Select(c => Symbols.TryGetValue(c, out var r)? r:c.ToString()));
@@ -55,13 +58,16 @@ public partial class MainWindow : Window
             string[] parametrs = expression.GetParameterNames().ToArray();
             int resultCount = (int)Math.Pow(2, parametrs.Length);
             results = new Result[resultCount];
-            calculateEq(parametrs, parametrs.Length, expression);
+            CalculateEq(parametrs, parametrs.Length, expression);
             isTavtology = (int)Math.Pow(2, parametrs.Length) == Result.countTrue || (int)Math.Pow(2, parametrs.Length) == Result.countFalse;
             PositiveCountText.Text = Result.countTrue.ToString();
             NegativeCountText.Text = Result.countFalse.ToString();
             TautologyText.Text = isTavtology ? "Да" : "Нет";
-            exportXlsx(results, equation, parametrs);
             DrawTable();
+            if (SaveAsXlsxCheckBox.IsEnabled)
+            {
+                ExportXlsx(results, equation, parametrs);
+            }
         }
         catch (Exception ex)
         {
@@ -70,7 +76,7 @@ public partial class MainWindow : Window
     }
 
 
-    public void exportXlsx(Result[] results, string expression, string[] parametrs)
+    public void ExportXlsx(Result[] results, string expression, string[] parametrs)
     {
         parametrs = parametrs.Append(expression).ToArray();
         using (var wBook = new XLWorkbook())
@@ -82,11 +88,11 @@ public partial class MainWindow : Window
                 worksheet.Cell(1, i+1).Value = parametrs[i];
             }
             worksheet.Columns().AdjustToContents();
-            wBook.SaveAs("Result.xlsx");
+            wBook.SaveAs(SavePathTextBox.Text);
         }
     }
     
-    public void calculateEq(string[] parametrs, int depth, Expression exp, int numberOfResult = 0)
+    public void CalculateEq(string[] parametrs, int depth, Expression exp, int numberOfResult = 0)
     {
         if (depth == 0)
         {
@@ -99,7 +105,7 @@ public partial class MainWindow : Window
             {
                 exp.Parameters[parametrs[^depth].ToString()] = status;
                 if (status) { numberOfResult += (int)Math.Pow(2, depth-1);}
-                calculateEq(parametrs, depth - 1, exp, numberOfResult);
+                CalculateEq(parametrs, depth - 1, exp, numberOfResult);
             }
         }
         

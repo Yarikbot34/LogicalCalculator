@@ -55,7 +55,8 @@
     
     <Grid ColumnDefinitions="325, *">
         
-        <Grid Grid.Column="0" RowDefinitions="Auto, Auto, Auto, Auto, Auto, *">
+        <!-- Добавлена ещё одна строка (Row 5) под кнопкой "Рассчитать" -->
+        <Grid Grid.Column="0" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, *">
             
             <TextBlock Grid.Row="0"
                        Text="Ввод данных"
@@ -107,6 +108,27 @@
                     Background="DarkSeaGreen"
                     Classes="calc-btn"
                     Click="CalculateButton_Click" /> 
+            
+            <!-- Новая строка: чекбокс "Сохранить как xlsx" + поле пути -->
+            <Grid Grid.Row="5"
+                  ColumnDefinitions="Auto, *"
+                  Margin="30,10,30,10"
+                  VerticalAlignment="Center">
+                
+                <CheckBox Grid.Column="0"
+                          x:Name="SaveAsXlsxCheckBox"
+                          Content="Сохранить как xlsx"
+                          VerticalAlignment="Center"
+                          VerticalContentAlignment="Center"
+                          Margin="0,0,10,0" />
+                
+                <TextBox Grid.Column="1"
+                         x:Name="SavePathTextBox"
+                         Watermark="Путь для сохранения файла..."
+                         VerticalContentAlignment="Center"
+                         Text="C:\result.xlsx" />
+            </Grid>
+            
         </Grid>
         
         <Grid Grid.Column="1" RowDefinitions="Auto, Auto, *">
