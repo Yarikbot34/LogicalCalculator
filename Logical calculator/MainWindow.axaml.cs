@@ -33,7 +33,6 @@ public partial class MainWindow : Window
         DataContext = this;
         InitializeComponent();
         string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        SavePathTextBox.Text = Path.Combine(desktopPath, "result.xlsx");
     }
     private void SymbolButton_Click(object? sender, RoutedEventArgs e)
     {
@@ -64,16 +63,22 @@ public partial class MainWindow : Window
             PositiveCountText.Text = Result.countTrue.ToString();
             NegativeCountText.Text = Result.countFalse.ToString();
             TautologyText.Text = isTavtology ? "Да" : "Нет";
+            ExportBlock.IsVisible = true;
             DrawTable();
-            if (SaveAsXlsxCheckBox.IsEnabled)
-            {
-                ExportXlsx(results, equation, parametrs);
-            }
         }
         catch (Exception ex)
         {
             ErrorTextBlock.Text = ex.Message;
         }
+    }
+
+    private void ExportXlsxButton_Click(object? sender, RoutedEventArgs e)
+    {
+        
+    }
+    private void ExportMarkdownButton_Click(object? sender, RoutedEventArgs e)
+    {
+        
     }
 
 
@@ -89,7 +94,7 @@ public partial class MainWindow : Window
                 worksheet.Cell(1, i+1).Value = parametrs[i];
             }
             worksheet.Columns().AdjustToContents();
-            wBook.SaveAs(SavePathTextBox.Text);
+            wBook.SaveAs(expression);
         }
     }
 

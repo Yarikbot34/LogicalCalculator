@@ -31,12 +31,29 @@
             <Setter Property="Margin" Value="0,10,0,20"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
         </Style>
+
+        <Style Selector="Button.export-btn">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Padding" Value="16,0"/>
+            <Setter Property="Margin" Value="6,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
         
         <Style Selector="TextBlock.column-header">
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Margin" Value="0,16,0,12"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+
+        <Style Selector="TextBlock.section-header">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,12,0,8"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
         
         <Style Selector="TextBlock.stat-label">
@@ -109,29 +126,44 @@
                     Classes="calc-btn"
                     Click="CalculateButton_Click" /> 
             
-            <!-- Новая строка: чекбокс "Сохранить как xlsx" + поле пути -->
-            <Grid Grid.Row="5"
-                  ColumnDefinitions="Auto, *"
-                  Margin="30,10,30,10"
-                  VerticalAlignment="Center">
-                
-                <CheckBox Grid.Column="0"
-                          x:Name="SaveAsXlsxCheckBox"
-                          Content="Сохранить как xlsx"
-                          VerticalAlignment="Center"
-                          VerticalContentAlignment="Center"
-                          Margin="0,0,10,0" />
-                
-                <TextBox Grid.Column="1"
-                         x:Name="SavePathTextBox"
-                         Watermark="Путь для сохранения файла..."
-                         VerticalContentAlignment="Center"
-                         Text="C:\result.xlsx" />
-            </Grid>
+            <Border Grid.Row="5" Grid.ColumnSpan="2"
+                    BorderBrush="Gray"
+                    x:Name="ExportBlock"
+                    IsVisible="False"
+                    BorderThickness="0,1,0,0"
+                    Margin="0,14,0,0"
+            >
+                <StackPanel 
+                            Orientation="Vertical"
+                            HorizontalAlignment="Left"
+                            Margin="20,0,0,4">
+                            
+                    <TextBlock 
+                               Text="Экспортировать как"
+                               Classes="section-header" />
+                        
+
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="ExportXlsxButton"
+                                Content="xlsx"
+                                Classes="export-btn"
+                                Background="#217346"
+                                Foreground="White"
+                                Click="ExportXlsxButton_Click" />
+                            
+                        <Button x:Name="ExportMarkdownButton"
+                                Content="markdown"
+                                Classes="export-btn"
+                                Background="#444444"
+                                Foreground="White"
+                                Click="ExportMarkdownButton_Click" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
             
         </Grid>
         
-        <Grid Grid.Column="1" RowDefinitions="Auto, Auto, *">
+        <Grid Grid.Column="1" RowDefinitions="Auto, Auto, Auto, Auto, *">
             
             <TextBlock Grid.Row="0" 
                        Text="Таблица истинности"
@@ -145,7 +177,7 @@
                     Padding="16,12"
                     Margin="0,0,0,0">
                 
-                <Grid ColumnDefinitions="3*, 1*" RowDefinitions="Auto, Auto, Auto">
+                <Grid ColumnDefinitions="3*, 1*" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto">
                     
                     <TextBlock Grid.Row="0" Grid.Column="0"
                                Text="Положительных исходов:"
@@ -178,7 +210,7 @@
                 </Grid>
                 
             </Border>
-            <Border Grid.Row="2"
+            <Border Grid.Row="4"
                     Background="Transparent"
                     BorderBrush="Gray"
                     BorderThickness="1,0,0,0"
