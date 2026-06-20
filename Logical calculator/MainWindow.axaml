@@ -158,6 +158,7 @@
                                 Foreground="White"
                                 Click="ExportMarkdownButton_Click" />
                     </StackPanel>
+                    <TextBlock x:Name = "ExportInfo"/>
                 </StackPanel>
             </Border>
             

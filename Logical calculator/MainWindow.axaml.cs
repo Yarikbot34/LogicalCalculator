@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input.Platform;
+using Avalonia.Platform.Storage;
 using Avalonia.Interactivity;
 using NCalc;
 using ClosedXML.Excel;
@@ -14,7 +14,9 @@ namespace Logical_calculator;
 
 public partial class MainWindow : Window
 {
-    public Result[] results;
+    private Result[] results;
+    private string[] parametrs;
+    private string equation;
     
     public ObservableCollection<string> KeyboardSymbols { get; } = new ObservableCollection<string>
     {
@@ -28,11 +30,11 @@ public partial class MainWindow : Window
         ['¬'] = "!", ['∧'] = " and ", ['∨'] = " or ", ['⊕'] = " != ", ['⇒'] = " <= ", ['≡'] = " == "
     };
     
+    
     public MainWindow()
     {
         DataContext = this;
         InitializeComponent();
-        string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
     }
     private void SymbolButton_Click(object? sender, RoutedEventArgs e)
     {
@@ -51,11 +53,11 @@ public partial class MainWindow : Window
         bool isTavtology;
         ErrorTextBlock.Text = "";
         string input = EquationTextBox.Text.Replace(" ", "");
-        string equation = string.Concat(input.Select(c => Symbols.TryGetValue(c, out var r)? r:c.ToString()));
+        equation = string.Concat(input.Select(c => Symbols.TryGetValue(c, out var r)? r:c.ToString()));
         try
         {
             var expression = new Expression(equation);
-            string[] parametrs = expression.GetParameterNames().ToArray();
+            parametrs = expression.GetParameterNames().ToArray();
             int resultCount = (int)Math.Pow(2, parametrs.Length);
             results = new Result[resultCount];
             CalculateEq(parametrs, parametrs.Length, expression);
@@ -74,33 +76,59 @@ public partial class MainWindow : Window
 
     private void ExportXlsxButton_Click(object? sender, RoutedEventArgs e)
     {
-        
+        if (results.Length != 0) { ExportXlsx(); ExportInfo.Text = ""; }
     }
     private void ExportMarkdownButton_Click(object? sender, RoutedEventArgs e)
     {
-        
+        if (results.Length != 0) { ExportMarkDown(); ExportInfo.Text = "Таблица скопирована в буфер обмена"; }
     }
 
 
-    public void ExportXlsx(Result[] results, string expression, string[] parametrs)
+    public void ExportXlsx()
     {
-        parametrs = parametrs.Append(expression).ToArray();
+        var topLevel = GetTopLevel(this);
+        if (topLevel == null) return;
+        parametrs = parametrs.Append(equation).ToArray();
         using (var wBook = new XLWorkbook())
         {
-            var worksheet = wBook.Worksheets.Add(expression);
+            var worksheet = wBook.Worksheets.Add(equation);
             worksheet.Cell(1, 1).InsertTable(results.Select(r => r.getData()));
             for(int i = 0; i < parametrs.Length; i++)
             {
                 worksheet.Cell(1, i+1).Value = parametrs[i];
             }
             worksheet.Columns().AdjustToContents();
-            wBook.SaveAs(expression);
+            try
+            {
+                var file = topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+                {
+                    Title = "Сохранить файл Excel", SuggestedFileName = "result.xlsx", DefaultExtension = "xlsx",
+                    FileTypeChoices = new[]
+                    {
+                        new FilePickerFileType("Excel файлы")
+                            { Patterns = new[] { "*.xlsx" } },
+                        new FilePickerFileType("Все файлы") { Patterns = new[] { "*.*" } }
+                    }
+                });
+
+                if (file.Result.Path.AbsolutePath != null)
+                {
+                    string filePath = file.Result.Path.AbsolutePath;
+                    Console.WriteLine(filePath);
+                    wBook.SaveAs(filePath);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
         }
     }
 
-    public void ExportMarkDown(Result[] results, string expression, string[] parametrs)
+    public void ExportMarkDown()
     {
-        parametrs = parametrs.Append(expression).ToArray();
+        parametrs = parametrs.Append(equation).ToArray();
         string table = "| " + string.Join(" | ", parametrs) + " |\n| ";
         for (int i = 0; i < parametrs.Length; i++)
         {

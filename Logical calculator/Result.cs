@@ -7,7 +7,7 @@ namespace Logical_calculator;
 
 public class Result
 {
-    public string equation;
+    public static string equation;
     public Dictionary<string, bool> values;
     public bool result;
     public static int countTrue;
