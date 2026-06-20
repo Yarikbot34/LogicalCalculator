@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using NCalc;
 using ClosedXML.Excel;
@@ -90,6 +91,22 @@ public partial class MainWindow : Window
             worksheet.Columns().AdjustToContents();
             wBook.SaveAs(SavePathTextBox.Text);
         }
+    }
+
+    public void ExportMarkDown(Result[] results, string expression, string[] parametrs)
+    {
+        parametrs = parametrs.Append(expression).ToArray();
+        string table = "| " + string.Join(" | ", parametrs) + " |\n| ";
+        for (int i = 0; i < parametrs.Length; i++)
+        {
+            table += ":-: |";
+        }
+        table += "\n";
+        foreach (var result in results)
+        {
+            table += "| " + string.Join(" | ", result.getData()) + " |\n";
+        }
+        Clipboard.SetTextAsync(table);
     }
     
     public void CalculateEq(string[] parametrs, int depth, Expression exp, int numberOfResult = 0)
