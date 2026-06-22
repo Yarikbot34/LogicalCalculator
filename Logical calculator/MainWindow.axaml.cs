@@ -7,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Input.Platform;
 using Avalonia.Platform.Storage;
 using Avalonia.Interactivity;
+using Avalonia.Styling;
 using NCalc;
 using ClosedXML.Excel;
 
@@ -48,39 +49,55 @@ public partial class MainWindow : Window
 
     private void CalculateButton_Click(object? sender, RoutedEventArgs e)
     {
-        Result.countFalse = 0;
-        Result.countTrue = 0;
-        bool isTavtology;
-        ErrorTextBlock.Text = "";
-        string input = EquationTextBox.Text.Replace(" ", "");
-        equation = string.Concat(input.Select(c => Symbols.TryGetValue(c, out var r)? r:c.ToString()));
-        try
+        if (EquationTextBox.Text != "")
         {
-            var expression = new Expression(equation);
-            parametrs = expression.GetParameterNames().ToArray();
-            int resultCount = (int)Math.Pow(2, parametrs.Length);
-            results = new Result[resultCount];
-            CalculateEq(parametrs, parametrs.Length, expression);
-            isTavtology = (int)Math.Pow(2, parametrs.Length) == Result.countTrue || (int)Math.Pow(2, parametrs.Length) == Result.countFalse;
-            PositiveCountText.Text = Result.countTrue.ToString();
-            NegativeCountText.Text = Result.countFalse.ToString();
-            TautologyText.Text = isTavtology ? "Да" : "Нет";
-            ExportBlock.IsVisible = true;
-            DrawTable();
-        }
-        catch (Exception ex)
-        {
-            ErrorTextBlock.Text = ex.Message;
+            Result.countFalse = 0;
+            Result.countTrue = 0;
+            bool isTavtology;
+            ErrorTextBlock.Text = "";
+            string input = EquationTextBox.Text.Replace(" ", "");
+            equation = string.Concat(input.Select(c => Symbols.TryGetValue(c, out var r)? r:c.ToString()));
+            try
+            {
+                var expression = new Expression(equation);
+                parametrs = expression.GetParameterNames().ToArray();
+                int resultCount = (int)Math.Pow(2, parametrs.Length);
+                results = new Result[resultCount];
+                CalculateEq(parametrs, parametrs.Length, expression);
+                isTavtology = (int)Math.Pow(2, parametrs.Length) == Result.countTrue || (int)Math.Pow(2, parametrs.Length) == Result.countFalse;
+                PositiveCountText.Text = Result.countTrue.ToString();
+                NegativeCountText.Text = Result.countFalse.ToString();
+                TautologyText.Text = isTavtology ? "Да" : "Нет";
+                ExportBlock.IsVisible = true;
+                DrawTable();
+            }
+            catch (Exception ex)
+            {
+                ErrorTextBlock.Text = ex.Message;
+            }
         }
     }
 
-    private void ExportXlsxButton_Click(object? sender, RoutedEventArgs e)
+    private void ExportXlsxButton_Click(object sender, RoutedEventArgs e)
     {
         if (results.Length != 0) { ExportXlsx(); ExportInfo.Text = ""; }
     }
-    private void ExportMarkdownButton_Click(object? sender, RoutedEventArgs e)
+    private void ExportMarkdownButton_Click(object sender, RoutedEventArgs e)
     {
         if (results.Length != 0) { ExportMarkDown(); ExportInfo.Text = "Таблица скопирована в буфер обмена"; }
+    }
+    private void ThemeToggleButton_Click(object sender, RoutedEventArgs e)
+    {
+        var app = Application.Current;
+        if (app != null)
+        {
+            var currentTheme = app.ActualThemeVariant;
+            app.RequestedThemeVariant = currentTheme == ThemeVariant.Dark 
+                ? ThemeVariant.Light 
+                : ThemeVariant.Dark;
+            
+            ThemeToggleButton.Content = currentTheme == ThemeVariant.Dark ? "🌙" : "☀️";
+        }
     }
 
 
@@ -88,14 +105,14 @@ public partial class MainWindow : Window
     {
         var topLevel = GetTopLevel(this);
         if (topLevel == null) return;
-        parametrs = parametrs.Append(equation).ToArray();
+        string[] exParametrs = parametrs.Append(equation).ToArray();
         using (var wBook = new XLWorkbook())
         {
             var worksheet = wBook.Worksheets.Add(equation);
             worksheet.Cell(1, 1).InsertTable(results.Select(r => r.getData()));
-            for(int i = 0; i < parametrs.Length; i++)
+            for(int i = 0; i < exParametrs.Length; i++)
             {
-                worksheet.Cell(1, i+1).Value = parametrs[i];
+                worksheet.Cell(1, i+1).Value = exParametrs[i];
             }
             worksheet.Columns().AdjustToContents();
             try
@@ -110,13 +127,8 @@ public partial class MainWindow : Window
                         new FilePickerFileType("Все файлы") { Patterns = new[] { "*.*" } }
                     }
                 });
-
-                if (file.Result.Path.AbsolutePath != null)
-                {
-                    string filePath = file.Result.Path.AbsolutePath;
-                    Console.WriteLine(filePath);
-                    wBook.SaveAs(filePath);
-                }
+                string filePath = file.Result.Path.AbsolutePath;
+                wBook.SaveAs(filePath);
             }
             catch (Exception ex)
             {
@@ -128,9 +140,9 @@ public partial class MainWindow : Window
 
     public void ExportMarkDown()
     {
-        parametrs = parametrs.Append(equation).ToArray();
-        string table = "| " + string.Join(" | ", parametrs) + " |\n| ";
-        for (int i = 0; i < parametrs.Length; i++)
+        string[] exParametrs = parametrs.Append(equation).ToArray();
+        string table = "| " + string.Join(" | ", exParametrs) + " |\n| ";
+        for (int i = 0; i < exParametrs.Length; i++)
         {
             table += ":-: |";
         }

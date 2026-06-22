@@ -5,7 +5,7 @@
         xmlns:local="clr-namespace:Logical_calculator"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="500"
         MinWidth="600" 
-        MinHeight="500"
+        MinHeight="630"
         Width="600"
         Height="700"
         x:Class="Logical_calculator.MainWindow"
@@ -38,6 +38,15 @@
             <Setter Property="Height" Value="40"/>
             <Setter Property="Padding" Value="16,0"/>
             <Setter Property="Margin" Value="6,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style Selector="Button.corner-btn">
+            <Setter Property="Width" Value="45"/>
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
         </Style>
@@ -131,8 +140,7 @@
                     x:Name="ExportBlock"
                     IsVisible="False"
                     BorderThickness="0,1,0,0"
-                    Margin="0,14,0,0"
-            >
+                    Margin="0,14,0,0">
                 <StackPanel 
                             Orientation="Vertical"
                             HorizontalAlignment="Left"
@@ -142,7 +150,6 @@
                                Text="Экспортировать как"
                                Classes="section-header" />
                         
-
                     <StackPanel Orientation="Horizontal">
                         <Button x:Name="ExportXlsxButton"
                                 Content="xlsx"
@@ -158,9 +165,24 @@
                                 Foreground="White"
                                 Click="ExportMarkdownButton_Click" />
                     </StackPanel>
-                    <TextBlock x:Name = "ExportInfo"/>
+                    <TextBlock x:Name="ExportInfo"/>
                 </StackPanel>
             </Border>
+
+            <!-- Кнопки в левом нижнем углу -->
+            <StackPanel Grid.Row="6"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom"
+                        Margin="10,0,0,10">
+                
+                <Button x:Name="ThemeToggleButton"
+                        Content="🌙"
+                        Classes="corner-btn"
+                        CornerRadius="15"
+                        Click="ThemeToggleButton_Click"
+                        ToolTip.Tip="Переключить тему" />
+            </StackPanel>
             
         </Grid>
         
