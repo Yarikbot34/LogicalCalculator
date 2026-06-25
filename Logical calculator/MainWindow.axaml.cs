@@ -36,6 +36,7 @@ public partial class MainWindow : Window
     {
         DataContext = this;
         InitializeComponent();
+        if (Application.Current != null) ThemeToggleButton.Content = Application.Current.ActualThemeVariant == ThemeVariant.Dark ? "☀️" : "🌙";
     }
     private void SymbolButton_Click(object? sender, RoutedEventArgs e)
     {
@@ -73,7 +74,7 @@ public partial class MainWindow : Window
             }
             catch (Exception ex)
             {
-                ErrorTextBlock.Text = ex.Message;
+                ErrorTextBlock.Text =  ex.Message;
             }
         }
     }
@@ -223,31 +224,31 @@ private void DrawTable()
 }
 
 
-    private Border CreateCell(string text, bool isHeader = false, bool isResult = false)
+private Border CreateCell(string text, bool isHeader = false, bool isResult = false, int rowNumber = 0)
+{
+    var tb = new TextBlock
     {
-        var tb = new TextBlock
-        {
-            Text = text,
-            Foreground = Avalonia.Media.Brushes.Black,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-            Padding = new Thickness(5),
-            FontSize = 32
-        };
-        
-        Avalonia.Media.IBrush background = Avalonia.Media.Brushes.LightGray;
-        if (isHeader) background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.SlateGray);
-        else if (isResult && text == "1" ) background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.DarkGreen);
-        else if (isResult && text == "0") background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.DarkRed);
-        
-        return new Border
-        {
-            Child = tb,
-            Background = background,
-            BorderBrush = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.Black),
-            BorderThickness = new Thickness(2), 
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch
-        };
-    }
+        Text = text,
+        Foreground = Avalonia.Media.Brushes.Black,
+        HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
+        VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+        Padding = new Thickness(5),
+        FontSize = 32
+    };
+    
+    Avalonia.Media.IBrush background = Avalonia.Media.Brushes.LightGray;
+    if (isHeader) background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.SlateGray);
+    else if (isResult && text == "1" ) background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.DarkGreen);
+    else if (isResult && text == "0") background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.DarkRed);
+    
+    return new Border
+    {
+        Child = tb,
+        Background = background,
+        BorderBrush = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Colors.Black),
+        BorderThickness = new Thickness(2), 
+        HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
+        VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch
+    };
+}
 }
