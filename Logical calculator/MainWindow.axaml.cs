@@ -53,7 +53,7 @@ public partial class MainWindow : Window
         if (EquationTextBox.Text != "")
         {
             Result.countFalse = 0;
-            Result.countTrue = 0;
+            Result.countTrue = 0; 
             bool isTavtology;
             ErrorTextBlock.Text = "";
             string input = EquationTextBox.Text.Replace(" ", "");

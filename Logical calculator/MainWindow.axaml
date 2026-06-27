@@ -10,7 +10,7 @@
         Height="700"
         x:Class="Logical_calculator.MainWindow"
         x:DataType="local:MainWindow"
-        Title="Logical_calculator">
+        Title="Логический калькулятор">
     
     <Window.Styles>
         <Style Selector="Button.key-btn">
@@ -81,7 +81,6 @@
     
     <Grid ColumnDefinitions="325, *">
         
-        <!-- Добавлена ещё одна строка (Row 5) под кнопкой "Рассчитать" -->
         <Grid Grid.Column="0" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, *">
             
             <TextBlock Grid.Row="0"
@@ -168,8 +167,7 @@
                     <TextBlock x:Name="ExportInfo"/>
                 </StackPanel>
             </Border>
-
-            <!-- Кнопки в левом нижнем углу -->
+            
             <StackPanel Grid.Row="6"
                         Orientation="Horizontal"
                         HorizontalAlignment="Left"
@@ -204,6 +202,7 @@
                     
                     <TextBlock Grid.Row="0" Grid.Column="0"
                                Text="Положительных исходов:"
+                               Margin="0,8,0,0"
                                Classes="stat-label" />
                     <TextBlock Grid.Row="0" Grid.Column="1"
                                x:Name="PositiveCountText"

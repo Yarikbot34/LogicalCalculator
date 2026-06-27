@@ -7,6 +7,7 @@
         <SelfContained>true</SelfContained>
         <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
         <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+         <ApplicationIcon>icon.ico</ApplicationIcon>
     <PublishTrimmed>false</PublishTrimmed>
 </PropertyGroup>
 
