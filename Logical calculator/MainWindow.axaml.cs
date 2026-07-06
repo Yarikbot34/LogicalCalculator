@@ -30,7 +30,12 @@ public partial class MainWindow : Window
     {
         ['¬'] = "!", ['∧'] = " and ", ['∨'] = " or ", ['⊕'] = " != ", ['⇒'] = " <= ", ['≡'] = " == "
     };
-    
+
+    public Dictionary<Type, string> Errors { get; } = new Dictionary<Type, string>
+    {
+        {typeof(NCalc.Exceptions.NCalcParserException), "Логическое выражение не обнаружено"},
+        {typeof(System.ArgumentException), "Неправильное использование символов"},
+    };
     
     public MainWindow()
     {
@@ -74,7 +79,8 @@ public partial class MainWindow : Window
             }
             catch (Exception ex)
             {
-                ErrorTextBlock.Text =  ex.Message;
+                ErrorTextBlock.Text =  "Ошибка: " + Errors.GetValueOrDefault(ex.GetType());
+                Console.WriteLine( ex.GetType());
             }
         }
     }

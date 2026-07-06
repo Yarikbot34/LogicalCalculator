@@ -99,6 +99,7 @@
             
             <TextBlock Grid.Row="2"
                        x:Name="ErrorTextBlock"
+                       TextWrapping="Wrap"
                        TextAlignment="Center"
                        Padding="0,0,0,12"
                        VerticalAlignment="Center"
