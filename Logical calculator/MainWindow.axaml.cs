@@ -80,7 +80,6 @@ public partial class MainWindow : Window
             catch (Exception ex)
             {
                 ErrorTextBlock.Text =  "Ошибка: " + Errors.GetValueOrDefault(ex.GetType());
-                Console.WriteLine( ex.GetType());
             }
         }
     }
@@ -108,42 +107,54 @@ public partial class MainWindow : Window
     }
 
 
-    public void ExportXlsx()
+    public async void ExportXlsx()
+{
+    var topLevel = GetTopLevel(this);
+    if (topLevel == null) return;
+
+    try
     {
-        var topLevel = GetTopLevel(this);
-        if (topLevel == null) return;
-        string[] exParametrs = parametrs.Append(equation).ToArray();
+        var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+        {
+            Title = "Сохранить файл Excel",
+            SuggestedFileName = "result.xlsx",
+            DefaultExtension = "xlsx",
+            FileTypeChoices = new[]
+            {
+                new FilePickerFileType("Excel файлы") { Patterns = new[] { "*.xlsx" } },
+                new FilePickerFileType("Все файлы") { Patterns = new[] { "*.*" } }
+            }
+        });
+        if (file == null) return; 
+        string filePath = file.Path.LocalPath; 
         using (var wBook = new XLWorkbook())
         {
             var worksheet = wBook.Worksheets.Add(equation);
-            worksheet.Cell(1, 1).InsertTable(results.Select(r => r.getData()));
+            string[] exParametrs = parametrs.Append(equation).ToArray();
             for(int i = 0; i < exParametrs.Length; i++)
             {
                 worksheet.Cell(1, i+1).Value = exParametrs[i];
             }
-            worksheet.Columns().AdjustToContents();
-            try
+            for (int row = 0; row < results.Length; row++)
             {
-                var file = topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+                var data = results[row].getData();
+                for (int col = 0; col < data.Length; col++)
                 {
-                    Title = "Сохранить файл Excel", SuggestedFileName = "result.xlsx", DefaultExtension = "xlsx",
-                    FileTypeChoices = new[]
-                    {
-                        new FilePickerFileType("Excel файлы")
-                            { Patterns = new[] { "*.xlsx" } },
-                        new FilePickerFileType("Все файлы") { Patterns = new[] { "*.*" } }
-                    }
-                });
-                string filePath = file.Result.Path.AbsolutePath;
-                wBook.SaveAs(filePath);
+                    worksheet.Cell(row + 2, col + 1).Value = data[col];
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            worksheet.Columns().AdjustToContents();
 
+            wBook.SaveAs(filePath);
         }
+        
+        ExportInfo.Text = "Файл успешно сохранен!";
     }
+    catch (Exception ex)
+    {
+        ExportInfo.Text = $"Ошибка сохранения: {ex.Message}";
+    }
+}
 
     public void ExportMarkDown()
     {
